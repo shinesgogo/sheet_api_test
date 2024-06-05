@@ -2,21 +2,14 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
-load_dotenv() 
+
+load_dotenv()
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Adjust this according to your needs
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
+# Load credentials from environment variables
 credentials_dict = {
     "type": "service_account",
     "project_id": os.getenv("PROJECT_ID"),
@@ -28,9 +21,7 @@ credentials_dict = {
     "token_uri": os.getenv("TOKEN_URI"),
     "auth_provider_x509_cert_url": os.getenv("AUTH_PROVIDER_X509_CERT_URL"),
     "client_x509_cert_url": os.getenv("CLIENT_X509_CERT_URL"),
-    "universe_domain": "googleapis.com",
 }
-
 
 credentials = service_account.Credentials.from_service_account_info(credentials_dict)
 
@@ -45,8 +36,8 @@ class Feedback(BaseModel):
 
 @app.post("/addFeedback")
 async def add_feedback(feedback: Feedback):
-    spreadsheet_id = os.getenv("SPREADSHEET_ID")  # Replace with your Google Sheets ID
-    range_name = 'Sheet1!A:D'  # Adjust the range as needed
+    spreadsheet_id = os.getenv("SPREADSHEET_ID")
+    range_name = 'Sheet1!A:D'
 
     values = [[feedback.url, feedback.category, feedback.score, feedback.feedback]]
     body = {
@@ -54,7 +45,7 @@ async def add_feedback(feedback: Feedback):
     }
 
     try:
-        result = await service.spreadsheets().values().append(
+        result = service.spreadsheets().values().append(
             spreadsheetId=spreadsheet_id,
             range=range_name,
             valueInputOption='USER_ENTERED',

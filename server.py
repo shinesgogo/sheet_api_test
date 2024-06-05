@@ -32,11 +32,7 @@ credentials_dict = {
 }
 
 
-# Load credentials from the JSON file
-credentials = service_account.Credentials.from_service_account_file(
-    credentials_dict,  # Update with the path to your credentials file
-    scopes=['https://www.googleapis.com/auth/spreadsheets']
-)
+credentials = service_account.Credentials.from_service_account_info(credentials_dict)
 
 # Create the Google Sheets API service
 service = build('sheets', 'v4', credentials=credentials)

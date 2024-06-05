@@ -54,7 +54,7 @@ async def add_feedback(feedback: Feedback):
     }
 
     try:
-        result = service.spreadsheets().values().append(
+        result = await service.spreadsheets().values().append(
             spreadsheetId=spreadsheet_id,
             range=range_name,
             valueInputOption='USER_ENTERED',

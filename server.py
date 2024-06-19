@@ -40,15 +40,19 @@ service = build('sheets', 'v4', credentials=credentials)
 class Feedback(BaseModel):
     url: str
     category: str
-    score: str
+    readability: str
+    usefulness: str
+    socialRelevance: str
+    credibility: str
+    overallScore: str
     feedback: str
 
 @app.post("/addFeedback")
 async def add_feedback(feedback: Feedback):
-    spreadsheet_id = os.getenv("SPREADSHEET_ID")  # Replace with your Google Sheets ID
-    range_name = 'Sheet1!A:D'  # Adjust the range as needed
+    spreadsheet_id = os.getenv("SPREADSHEET_ID") 
+    range_name = 'Sheet1!A:H'  # Adjust the range as needed
 
-    values = [[feedback.url, feedback.category, feedback.score, feedback.feedback]]
+    values = [[feedback.url, feedback.category, feedback.readability, feedback.usefulness, feedback.socialRelevance, feedback.credibility, feedback.overallScore, feedback.feedback]]
     body = {
         'values': values
     }

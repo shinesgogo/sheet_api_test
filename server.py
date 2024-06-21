@@ -39,6 +39,7 @@ service = build('sheets', 'v4', credentials=credentials)
 
 class Feedback(BaseModel):
     url: str
+    userType: str
     category: str
     readability: str
     usefulness: str
@@ -52,7 +53,7 @@ async def add_feedback(feedback: Feedback):
     spreadsheet_id = os.getenv("SPREADSHEET_ID") 
     range_name = 'Sheet1!A:H'  # Adjust the range as needed
 
-    values = [[feedback.url, feedback.category, feedback.readability, feedback.usefulness, feedback.socialRelevance, feedback.credibility, feedback.overallScore, feedback.feedback]]
+    values = [[feedback.url, feedback.userType, feedback.category, feedback.readability, feedback.usefulness, feedback.socialRelevance, feedback.credibility, feedback.overallScore, feedback.feedback]]
     body = {
         'values': values
     }
